@@ -8,5 +8,5 @@ from flask import render_template
 
 @main.route('/')
 def index():
-    return '<h1>hello world!</h1>'
+    return render_template('index.html')
 
