@@ -19,7 +19,7 @@ def get_articles(limit, offset):
             return Article.query.all().order_by(-Article.create_time).limit(limit).offset(offset*limit).items
         else:
             raise ValueError
-    except ValueError:
+    except (ValueError, TypeError):
         return []
 
 
