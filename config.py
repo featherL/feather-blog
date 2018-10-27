@@ -8,7 +8,7 @@ HOSTNAME = '127.0.0.1'
 PORT = '3306'
 USERNAME = 'root'
 PASSWORD = 'flask_test'
-DATABASE = 'feather-blog'
+DATABASE = 'feather_blog'
 DB_URI = "mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8".format(USERNAME, PASSWORD,
                                                               HOSTNAME, PORT, DATABASE)
 
