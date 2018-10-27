@@ -1,6 +1,5 @@
 from flask import Blueprint
 
-api = Blueprint('api', __name__)
+admin = Blueprint('admin', __name__)
 
 from . import views, errors
-

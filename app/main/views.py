@@ -3,10 +3,22 @@
 """
 
 from . import main
-from flask import render_template
+from flask import render_template, request
+from ..models import Article
 
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    page_index = request.args.get('page_index') or 0
+    page_count = request.args.get('page_count') or 10
+
+    articles = Article.query.order_by(-Article.create_time).limit(page_count).offset(page_index*page_count).all()
+
+    # print('articles: %s' % articles)  # debug
+
+    context = {
+        'articles':articles
+    }
+
+    return render_template('index.html', **context)
 
