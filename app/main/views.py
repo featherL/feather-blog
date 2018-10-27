@@ -14,8 +14,10 @@ def index():
 
     articles = Article.query.order_by(-Article.create_time).limit(page_count).offset(page_index*page_count).all()
 
+    # print('articles: %s' % articles)  # debug
+
     context = {
-        'aritcles':articles
+        'articles':articles
     }
 
     return render_template('index.html', **context)

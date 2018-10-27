@@ -6,11 +6,13 @@
 
 {% block main %}
     {% if articles %}
-        {% for article in aritcles %}
-            <span>title: {{ article.title }}</span>
-            <span>ctime: {{ article.create_time}}</span>
-            <span>author: {{ article.author.nickname }}</span>
-            <span>content: {{ article.content }}</span>
+        {% for article in articles %}
+            <div>
+                <span>title: {{ article.title }}</span>
+                <span>ctime: {{ article.create_time}}</span>
+                <span>author: {{ article.author.nickname }}</span>
+                <span>content: {{ article.content }}</span>
+            </div>
         {% endfor %}
     {% endif %}
 {% endblock %}
