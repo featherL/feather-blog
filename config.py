@@ -3,7 +3,15 @@
 """
 
 import os
-basedir = os.path.abspath(os.path.dirname(__file__))
+
+HOSTNAME = '127.0.0.1'
+PORT = '3306'
+USERNAME = 'root'
+PASSWORD = 'flask_test'
+DATABASE = 'feather-blog'
+DB_URI = "mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8".format(USERNAME, PASSWORD,
+                                                              HOSTNAME, PORT, DATABASE)
+
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32)
@@ -12,9 +20,24 @@ class Config:
     def init_app(app):
         pass
 
+
+class DevelopmentConfig(Config):
+    DEBUG = True  # debug模式
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URI') or DB_URI
+
+
 class TestingConfig(Config):
-    DEBUG = True
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URI') or DB_URI
+
+
+class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URI') or DB_URI
+
 
 config = {
-    'testing':TestingConfig
+    'development': DevelopmentConfig,
+    'testing':TestingConfig,
+    'production': ProductionConfig,
+    'default': DevelopmentConfig
 }
