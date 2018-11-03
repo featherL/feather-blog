@@ -4,7 +4,7 @@
 
 from . import admin
 from functools import wraps
-from flask import session, g, redirect, url_for, request, render_template
+from flask import session, g, redirect, url_for, request, render_template, abort
 from ..models import User, Article
 from .. import db
 
@@ -16,7 +16,7 @@ def login_required(func):
         if g.user:
             return func(*args, **kwargs)
         else:
-            return redirect(url_for('admin.login'))
+            abort(403)
     return wrapper
 
 
