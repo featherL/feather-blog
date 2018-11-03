@@ -23,8 +23,10 @@ def login_required(func):
 @admin.before_request
 def hook_before_request():
     # user_id = session.get('user_id')  # 获取账户的id
+
+    # debug
     user_id = 1
-    g.user = User.query.filter(User.id == user_id).first()  # debug
+    g.user = User.query.filter(User.id == user_id).first()
 
 
 @admin.route('/add_article', methods=['GET', 'POST'])

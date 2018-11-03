@@ -8,6 +8,7 @@
     {% if articles %}
         {% for article in articles %}
             <div>
+                <span>id: {{ article.id }}</span>
                 <span>title: {{ article.title }}</span>
                 <span>ctime: {{ article.create_time}}</span>
                 <span>author: {{ article.author.nickname }}</span>
