@@ -5,5 +5,5 @@
 {% block head %}{% endblock %}
 
 {% block main %}
-    <p>{{ article.content }}</p>
+    <p>{{ article.content | md | safe }}</p>
 {% endblock %}
