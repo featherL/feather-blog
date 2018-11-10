@@ -1,17 +1,31 @@
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<form action="" method="post">
-    <input type="text" placeholder="title" name="title">
-    <br>
-    <textarea name="content" id="" cols="30" rows="10"></textarea>
-    <input type="submit">
-</form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}{{ 编辑文章 }}{% endblock %}
+
+{% block head %}
+    <script src="{{ url_for('static', filename='js/add_article.js') }}"></script>
+    {{ pagedown.include_pagedown() }}
+{% endblock %}
+
+{% block main %}
+    <form action="" method="post" class="form" role="form">
+        {{ form.hidden_tag() }}
+        <div class="form-group form-inline">
+            {{ form.title(id='title', class='form-control', placeholder=form.title.label.text ) }}
+            {{ form.tags(class="form-control", placeholder=form.tags.label.text) }}
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.content(only_input=True, class="form-control",placeholder=form.content.label.text, rows=35) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.content(only_preview=True) }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+             {{ form.submit(class="btn btn-default") }}
+         </div>
+    </form>
+{% endblock %}

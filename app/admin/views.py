@@ -5,8 +5,9 @@
 from . import admin
 from functools import wraps
 from flask import session, g, redirect, url_for, request, render_template, abort
-from ..models import User, Article
+from ..models import User, Article, Tag
 from .. import db
+from ..forms import ArticleForm
 
 
 def login_required(func):
@@ -32,18 +33,21 @@ def hook_before_request():
 @admin.route('/add_article', methods=['GET', 'POST'])
 @login_required
 def add_article():
-    if request.method == 'GET':
-        return render_template('add_article.html')
-    else:
-        title = request.form.get('title')
-        content = request.form.get('content')
+    form = ArticleForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+        tags = form.tags.data.split()
+        article = Article(title=title, content=content, author=g.user)
+        for tag_id in tags:
+            tag = Tag.query.filter(Tag.id==tag_id).first()
+            if tag:
+                article.tags.append(tag)
 
-        new_article = Article(title=title, content=content)
-        new_article.author = g.user
+        session.add(article)
+        session.commit()
 
-        db.session.add(new_article)
-        db.session.commit()
         return redirect(url_for('main.index'))
-
-
+    else:
+        return render_template('add_article.html', form=form)
 

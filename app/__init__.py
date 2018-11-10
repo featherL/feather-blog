@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_pagedown import PageDown
 from config import config
 
 db = SQLAlchemy()
+pagedown = PageDown()
 
 
 def create_app(config_name):
@@ -14,6 +16,7 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     db.init_app(app)
+    pagedown.init_app(app)
 
     from .main import main as main_blueprint
     from .admin import admin as admin_blueprint
