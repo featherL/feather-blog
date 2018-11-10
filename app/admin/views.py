@@ -7,7 +7,8 @@ from functools import wraps
 from flask import session, g, redirect, url_for, render_template, abort
 from ..models import User, Article, Tag
 from .. import db
-from ..forms import ArticleForm
+from ..forms import ArticleForm, LoginForm
+import hashlib
 
 
 def login_required(func):
@@ -23,10 +24,8 @@ def login_required(func):
 
 @admin.before_request
 def hook_before_request():
-    # user_id = session.get('user_id')  # 获取账户的id
+    user_id = session.get('user_id')  # 获取账户的id
 
-    # debug
-    user_id = 1
     g.user = User.query.filter(User.id == user_id).first()
 
 
@@ -62,4 +61,24 @@ def add_article():
 def index():
     return render_template('manage_page.html')
 
+
+@admin.route('/login/', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        sha1 = hashlib.sha1()
+        sha1.update(password.encode('utf-8'))
+        hash = sha1.hexdigest()
+
+        user = User.query.filter(User.username == username and User.password == hash).first()
+        if user:
+            session['user_id'] = user.id
+            return redirect(url_for('admin.index'))
+        else:
+            return render_template('login.html', form=form, errmsg='登录失败')
+    else:
+        return render_template('login.html', form=form)
 

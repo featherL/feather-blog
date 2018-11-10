@@ -3,7 +3,7 @@
 """
 
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, StringField, PasswordField
+from wtforms import SubmitField, StringField, PasswordField, Form
 from wtforms.validators import DataRequired
 from flask_pagedown.fields import PageDownField
 
@@ -18,8 +18,8 @@ class ArticleForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     """登录表单"""
-    username = StringField("用户名", validators=[DataRequired])
-    password = PasswordField("密码", validators=[DataRequired])
+    username = StringField("用户名", validators=[DataRequired()])
+    password = PasswordField("密码", validators=[DataRequired()])
     submit = SubmitField("登录")
 
 
