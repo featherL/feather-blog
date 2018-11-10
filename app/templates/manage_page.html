@@ -5,5 +5,7 @@
 {% block head %}{% endblock %}
 
 {% block main %}
-    <p>后台管理主页</p>
+{% for name, route in routes %}
+    <a class="btn btn-default" href="{{ url_for(route) }}" role="button">{{ name }}</a>
+{% endfor %}
 {% endblock %}

@@ -32,3 +32,9 @@ class RegisterForm(FlaskForm):
     submit = SubmitField("注册")
 
 
+class TagForm(FlaskForm):
+    """添加标签的表单"""
+    tag_name = StringField("标签名字", validators=[DataRequired(), Length(1, 50)])
+    submit = SubmitField("新建")
+
+

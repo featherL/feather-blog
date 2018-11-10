@@ -7,7 +7,7 @@ from functools import wraps
 from flask import session, g, redirect, url_for, render_template, abort
 from ..models import User, Article, Tag
 from .. import db
-from ..forms import ArticleForm, LoginForm, RegisterForm
+from ..forms import ArticleForm, LoginForm, RegisterForm, TagForm
 
 
 def login_required(func):
@@ -30,7 +30,12 @@ def hook_before_request():
 
 @admin.context_processor
 def context_processor():
-    return { 'g':g }
+    routes = [  # 所有功能的路由
+        ('注销', 'admin.logout'),
+        ('创建文章', 'admin.add_article'),
+        ('管理标签', 'admin.manage_tags')
+    ]
+    return { 'g':g, 'routes':routes }
 
 
 @admin.route('/add_article/', methods=['GET', 'POST'])
@@ -63,6 +68,7 @@ def index():
 
 @admin.route('/login/', methods=['GET', 'POST'])
 def login():
+    """登录"""
     form = LoginForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -79,8 +85,53 @@ def login():
         return render_template('login.html', form=form)
 
 
+@admin.route('/logout/')
+@login_required
+def logout():
+    session.clear()
+    return redirect(url_for('admin.login'))
+
+
+@admin.route('/manage_tags/', methods=['GET', 'POST'])
+@login_required
+def manage_tags():
+    """管理标签"""
+    form = TagForm()
+    tags = Tag.query.all()
+    context = {
+        'form':form,
+        'tags':tags
+    }
+    if form.validate_on_submit():
+        tag_name = form.tag_name.data
+        tag = Tag.query.filter(Tag.tag_name == tag_name).first()
+        if tag:
+            context['errmsg'] = '标签已存在'
+            return render_template('manage_tags.html', **context)
+        else:
+            tag = Tag(tag_name=tag_name)
+            db.session.add(tag)
+            db.session.commit()
+            return redirect(url_for('admin.manage_tags'))
+    else:
+        return render_template('manage_tags.html', **context)
+
+
+@admin.route('/del_tag/<tag_id>/')
+@login_required
+def del_tag(tag_id):
+    """删除标签"""
+    tag = Tag.query.filter(Tag.id == tag_id).first()
+    if tag:
+        db.session.delete(tag)
+        db.session.commit()
+    return redirect(url_for('admin.manage_tags'))
+
+
+'''
 @admin.route('/register/', methods=['GET', 'POST'])
 def register():
+    """注册, 注册完毕后注释掉"""
     form = RegisterForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -104,4 +155,6 @@ def register():
             return redirect(url_for('admin.login'))
     else:
         return render_template('register.html', form=form)
+'''
+
 
