@@ -19,6 +19,7 @@
     - templates
     - `__init__.py`
     - `models.py` 
+    - `forms.py`
 + `config.py`
 + `manage.py`
 + `requirements.txt`
