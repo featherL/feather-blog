@@ -15,6 +15,7 @@ DB_URI = "mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8".format(USERNAME, PASSWORD
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32)
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod
     def init_app(app):

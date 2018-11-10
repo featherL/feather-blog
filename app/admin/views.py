@@ -30,7 +30,7 @@ def hook_before_request():
     g.user = User.query.filter(User.id == user_id).first()
 
 
-@admin.route('/add_article', methods=['GET', 'POST'])
+@admin.route('/add_article/', methods=['GET', 'POST'])
 @login_required
 def add_article():
     form = ArticleForm()
@@ -40,14 +40,19 @@ def add_article():
         tags = form.tags.data.split()
         article = Article(title=title, content=content, author=g.user)
         for tag_id in tags:
-            tag = Tag.query.filter(Tag.id==tag_id).first()
+            tag = Tag.query.filter(Tag.id == tag_id).first()
             if tag:
                 article.tags.append(tag)
 
-        session.add(article)
-        session.commit()
+        db.session.add(article)
+        db.session.commit()
 
         return redirect(url_for('main.index'))
     else:
         return render_template('add_article.html', form=form)
 
+
+@admin.route('/')
+@login_required
+def index():
+    return render_template('')
