@@ -7,6 +7,8 @@ from markdown import markdown
 import bleach
 from datetime import datetime
 from sqlalchemy import event
+import hashlib
+
 
 # 文章与标签的中间表
 article_tag = db.Table(
@@ -23,6 +25,20 @@ class User(db.Model):
     nickname = db.Column(db.String(50), nullable=False)  # 昵称是公开的
     username = db.Column(db.String(50), nullable=False) # 用户名用于登录，非公开
     password = db.Column(db.String(100), nullable=False)  # 密码hash值
+
+    def set_password(self, password):
+        sha1 = hashlib.sha1()
+        sha1.update(password.encode('utf-8'))
+        hash_code = sha1.hexdigest()
+        self.password = hash_code
+
+    def check_password(self, password):
+        """校验密码"""
+        sha1 = hashlib.sha1()
+        sha1.update(password.encode('utf-8'))
+        hash_code = sha1.hexdigest()
+
+        return self.password == hash_code
 
 
 class Article(db.Model):
