@@ -4,7 +4,7 @@
 
 from . import admin
 from functools import wraps
-from flask import session, g, redirect, url_for, request, render_template, abort
+from flask import session, g, redirect, url_for, render_template, abort
 from ..models import User, Article, Tag
 from .. import db
 from ..forms import ArticleForm
@@ -30,6 +30,11 @@ def hook_before_request():
     g.user = User.query.filter(User.id == user_id).first()
 
 
+@admin.context_processor
+def context_processor():
+    return { 'g':g }
+
+
 @admin.route('/add_article/', methods=['GET', 'POST'])
 @login_required
 def add_article():
@@ -47,7 +52,7 @@ def add_article():
         db.session.add(article)
         db.session.commit()
 
-        return redirect(url_for('main.index'))
+        return redirect(url_for('admin.index'))
     else:
         return render_template('add_article.html', form=form)
 
@@ -55,4 +60,6 @@ def add_article():
 @admin.route('/')
 @login_required
 def index():
-    return render_template('')
+    return render_template('manage_page.html')
+
+
